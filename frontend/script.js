@@ -9,15 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const downloadBpmBtn = document.getElementById('downloadBpm');
     const downloadKeyBtn = document.getElementById('downloadKey');
 
-    // Моковые данные для демонстрации
-    const mockResponse = {
-        bpm: 128,
-        key: "C Major",
-        bpmDataUrl: "#",
-        keyDataUrl: "#"
-    };
-
-    // Отслеживание выбора файла
     audioFileInput.addEventListener('change', function() {
         if (this.files && this.files[0]) {
             fileInfo.textContent = this.files[0].name;
@@ -28,65 +19,69 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Обработка отправки формы
     uploadForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        
         const file = audioFileInput.files[0];
+        
         if (!file) {
             showAlert('Пожалуйста, выберите аудиофайл', 'error');
             return;
         }
         
-        // Проверка типа файла
         if (!file.type.match('audio.*')) {
             showAlert('Пожалуйста, выберите аудиофайл (MP3, WAV и т.д.)', 'error');
             return;
         }
         
-        // Показываем индикатор загрузки
         loadingIndicator.style.display = 'block';
         resultsSection.style.display = 'none';
-        
-        // Имитация анализа (в реальном приложении здесь будет запрос к бэкенду)
-        setTimeout(() => {
-            processFile(file);
-        }, 2000);
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch('http://localhost:5000/analyze', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            loadingIndicator.style.display = 'none';
+            if (data.error) throw new Error(data.error);
+            displayResults(data);
+        })
+        .catch(error => {
+            loadingIndicator.style.display = 'none';
+            showAlert(`Ошибка: ${error.message}`, 'error');
+        });
     });
 
-    function processFile(file) {
-        // Здесь будет реальная обработка файла
-        // Пока используем моковые данные
-        
-        // Скрываем индикатор загрузки
-        loadingIndicator.style.display = 'none';
-        
-        // Показываем результаты
-        displayResults(mockResponse);
-    }
-
     function displayResults(data) {
-        // Анимация появления результатов
         bpmResult.textContent = '--';
         keyResult.textContent = '--';
-        
         resultsSection.style.display = 'block';
         
-        // Анимация счёта для BPM
         animateValue(bpmResult, 0, data.bpm, 1000);
         keyResult.textContent = data.key;
         
-        // Настройка кнопок скачивания
         downloadBpmBtn.onclick = () => {
-            showAlert(`Данные BPM (${data.bpm}) готовы к скачиванию`, 'success');
-            // window.location.href = data.bpmDataUrl;
+            const blob = new Blob([`BPM: ${data.bpm}`], {type: 'text/plain'});
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `bpm_${data.bpm}.txt`;
+            a.click();
         };
         
         downloadKeyBtn.onclick = () => {
-            showAlert(`Данные тональности (${data.key}) готовы к скачиванию`, 'success');
-            // window.location.href = data.keyDataUrl;
+            const blob = new Blob([`Ключ: ${data.key}`], {type: 'text/plain'});
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `key_${data.key}.txt`;
+            a.click();
         };
     }
+
 
     // Вспомогательные функции
     function animateValue(element, start, end, duration) {

@@ -21,11 +21,13 @@
 ## Сборка образа docker
 
 ```bash
-docker build -t musiclab .
+docker build -t musiclab-unified .
 ```
 
 ## Запуск контейнера
 
 ```bash
-docker run -d -p 8080:80 --name musiclab-container musiclab
+docker run -p 8080:80 musiclab-unified
+
+docker-compose up --build
 ```
