@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализатор аудио | MusicLab</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background"></div>
+    <div class="container">
+        <header>
+            <h1><span class="logo-icon">🎵</span> MusicLab</h1>
+            <p class="subtitle">Анализ музыкальных характеристик</p>
+        </header>
+        
+        <div class="upload-card">
+            <div class="wave-animation"></div>
+            <h2><i class="icon-upload"></i> Загрузите аудиофайл</h2>
+            <form id="uploadForm">
+                <div class="file-upload-area">
+                    <input type="file" id="audioFile" accept="audio/*" required>
+                    <label for="audioFile" class="file-label">
+                        <span class="file-icon">📁</span>
+                        <span class="file-text">Выберите файл</span>
+                    </label>
+                    <div class="file-info" id="fileInfo">Файл не выбран</div>
+                </div>
+                <button type="submit" class="analyze-btn">
+                    <span class="btn-icon">🔍</span> Анализировать
+                </button>
+            </form>
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Анализируем ваш трек...</p>
+            </div>
+        </div>
+        
+        <div class="results-card" id="resultsSection">
+            <h2><i class="icon-results"></i> Результаты анализа</h2>
+            <div class="results-grid">
+                <div class="result-box">
+                    <div class="result-icon">🎚️</div>
+                    <h3>Темп</h3>
+                    <div class="result-value" id="bpmResult">--</div>
+                    <div class="result-unit">BPM</div>
+                </div>
+                <div class="result-box">
+                    <div class="result-icon">🎼</div>
+                    <h3>Тональность</h3>
+                    <div class="result-value" id="keyResult">--</div>
+                    <div class="result-unit">Ключ</div>
+                </div>
+            </div>
+            <div class="download-section">
+                <button class="download-btn" id="downloadBpm">
+                    <span class="btn-icon">⬇️</span> Скачать BPM
+                </button>
+                <button class="download-btn" id="downloadKey">
+                    <span class="btn-icon">⬇️</span> Скачать тональность
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
