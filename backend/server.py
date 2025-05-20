@@ -4,11 +4,13 @@ from werkzeug.utils import secure_filename
 import librosa
 import numpy as np
 import os
+import logging
 
 app = Flask(__name__)
 CORS(app)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.logger.setLevel(logging.DEBUG)
 
 
 @app.after_request
@@ -43,11 +45,14 @@ def upload_file():
     file.save(save_path)
 
     try:
+        # Перенесите анализ сюда
         result = analyze_audio(save_path)
         return jsonify(result)
     except Exception as e:
+        app.logger.error(f"CRITICAL ERROR: {str(e)}", exc_info=True)
         return jsonify({'error': str(e)}), 500
     finally:
+        # Удаление после обработки
         if os.path.exists(save_path):
             os.remove(save_path)
 

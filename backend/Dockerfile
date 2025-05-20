@@ -5,8 +5,10 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     libsndfile1 \
     ffmpeg \
-    && rm -rf /var/lib/apt/lists/* \
-    && update-ca-certificates
+    libavcodec-extra \
+    && rm -rf /var/lib/apt/lists/*
+    # \
+    #&& update-ca-certificates
 
 WORKDIR /app
 
