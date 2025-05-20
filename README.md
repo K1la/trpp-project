@@ -17,3 +17,15 @@
 - Веб-браузер с поддержкой ES6+ (Chrome 90+, Firefox 88+, Edge 90+)
 - Шрифт [Montserrat](https://fonts.google.com/specimen/Montserrat) (подключается через CDN)
 - Локальный сервер (рекомендуется для корректной работы File API)
+
+## Сборка образа docker
+
+```bash
+docker build -t musiclab .
+```
+
+## Запуск контейнера
+
+```bash
+docker run -d -p 8080:80 --name musiclab-container musiclab
+```
